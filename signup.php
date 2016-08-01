@@ -88,7 +88,7 @@ if ($num_rows<=0) {
 } else {
 
   echo "{";
-  echo '"status_code" : 200,';
+  echo '"status_code" : 400,';
   //  echo "<br/>";
   echo '"status_message" : "Failed to Sign Up. Email Exists Please Login."';
   echo "}";
@@ -98,7 +98,7 @@ if ($num_rows<=0) {
 } else {
 
   echo "{";
-  echo '"status_code" : 200,';
+  echo '"status_code" : 400,';
   //  echo "<br/>"; 
   echo '"status_message" : "This email is already registered. Please either Signin or try some other email."';
   echo "}";

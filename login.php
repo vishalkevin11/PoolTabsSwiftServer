@@ -57,7 +57,7 @@ $response_array[] = $tmpBusArray;
         } else {
             
             echo "{";
-            echo '"status_code" : 200,';
+            echo '"status_code" : 400,';
           //  echo "<br/>";
             echo '"status_message" : "Login error, Please check username or password"';
             echo "}";

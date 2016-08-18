@@ -1,24 +1,30 @@
 
 <?php 
 
- if (!$link = @mysql_connect('localhost', 'root', 'root')) {
-     echo 'Could not connect to mysql';
-     exit;
- }
+   if (!$link = @mysql_connect('localhost', 'root', 'root')) {
+    echo 'Could not connect to mysql';
+    exit;
+}
 
 
- if (!mysql_select_db('TavantPool', $link)) {
-     echo 'Could not select database';
-     exit;
- }
+if (!mysql_select_db('TavantPool', $link)) {
+    echo 'Could not select database';
+    exit;
+}
 
-date_default_timezone_set("Asia/Kolkata");
+        
+       date_default_timezone_set("Asia/Kolkata");
 
-$email_name_value = $_POST['email'];
-$password_value = $_POST['password'];
+$handle = fopen('php://input','r');
+$jsonInput = fgets($handle);
+$decoded = json_decode($jsonInput,true);
 
+$email_name_value = $decoded['email'];
+$password_value = $decoded['password'];
+// echo "string".$email_name_value;
+// echo "string".$password_value;
 
-$sql = "SELECT username, email FROM Login WHERE ( email = '".$email_name_value."') and password = '".$password_value."';";
+$sql = "SELECT  email,phonenumber FROM Login WHERE ( email = '".$email_name_value."') and password = '".$password_value."';";
 
 //$sql = "SELECT lat, lng, username, productname, uniqueid, uploaddate, reportedabuse, phonenumber, email, address, imageurl, deviceid, description, id FROM Product ";
 
@@ -27,7 +33,7 @@ $sql = "SELECT username, email FROM Login WHERE ( email = '".$email_name_value."
 $product_type_result = mysql_query($sql,$link);
 
 //echo 'this is crap'.json_encode($busResult);
- //print_r ($sql);
+ //echo "string".$sql;
 
 
 $response_array = array();
@@ -36,10 +42,10 @@ $response_array = array();
 
 
 $tmpBusArray = array(
-  'username' => $row['username'],
- 'email' => $row['email']
+ 'email' => $row['email'],
+ 'phonenumber' => $row['phonenumber']
      );
-$response_array[] = $tmpBusArray;
+$response_array = $tmpBusArray;
     
   }
 
@@ -51,7 +57,8 @@ $response_array[] = $tmpBusArray;
             echo "{";
             echo '"status_code" : 200,';
            
-            echo '"status_message" : "Successfuly logged In"';
+            echo '"status_message" : "Successfuly Signed-In",';
+            echo '"profile" :'.json_encode($response_array);
             echo "}";
             
         } else {
@@ -59,7 +66,7 @@ $response_array[] = $tmpBusArray;
             echo "{";
             echo '"status_code" : 400,';
           //  echo "<br/>";
-            echo '"status_message" : "Login error, Please check username or password"';
+            echo '"status_message" : "Sign-In error, Please check username or password or Sign-Up."';
             echo "}";
             
         }

@@ -23,7 +23,8 @@ if(is_array($records)){
         $fieldVal4 = mysql_real_escape_string($records[$row][3]);
         $fieldVal5 = mysql_real_escape_string($records[$row][4]);
         $fieldVal6 = mysql_real_escape_string($records[$row][5]);
-        $query ="INSERT INTO LatLongs (latitude, longitude, routeId, distance , duration,htmlImstruction) VALUES ( '". $fieldVal1."','".$fieldVal2."','".$fieldVal3."','".$fieldVal4."',,'".$fieldVal5."',,'".$fieldVal6."')";
+        $query ="INSERT INTO LatLongs (latitude, longitude, routeId, distance , duration,htmlImstruction) 
+        VALUES ( '". $fieldVal1."','".$fieldVal2."','".$fieldVal3."','".$fieldVal4."',,'".$fieldVal5."',,'".$fieldVal6."')";
         mysqli_query($conn, $query);
     }
 

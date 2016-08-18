@@ -15,9 +15,6 @@ if (!mysql_select_db('TavantPool', $link)) {
 
 date_default_timezone_set("Asia/Kolkata");
 
-
-$email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']."'" : "";
-
     //$trip_path = $_POST['trip_path'];
 
     // $source_name =  $_POST['source_name'];
@@ -29,7 +26,8 @@ $email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']
     // $traveller_type =  $_POST['traveller_type'];
     // $trip_type =  $_POST['trip_type'];
     // $total_trip_time =  $_POST['total_trip_time'];
-    // $uniqueid_val        = strtotime($date);
+     $routeId        = $_GET['unique_value'];
+   //  $routeId = 1470225228;
     // $phonenumber_val     = $_POST['phone'];
    //  $email_val           = $_POST['email'];
 
@@ -50,18 +48,9 @@ $email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']
 //         FROM PoolTrip WHERE email_val 
 //                        LIKE '%".$email_val."%';";
 
-$sql = "SELECT uniqueid_val,
-    trip_path,
-  source_name, 
-  destination_name,
-  source_lat,
-        source_lng,
-        destination_lat,
-        destination_lng, 
-  time_leaving_source, time_leaving_destination,
-   number_of_seats, traveller_type, trip_type, total_trip_time,total_trip_distance,trip_via,
- phonenumber_val, email_val, is_trip_live
-         FROM PoolTrip where email_val = ".$email_val.";";
+
+$sql = "SELECT latitude, longitude, routeId, distance , duration,htmlImstruction,polyline
+         FROM LatLongs where routeId =".$routeId.";";
 
                       /* $sql = "SELECT uniqueid_val,
     trip_path,
@@ -77,6 +66,7 @@ $sql = "SELECT uniqueid_val,
          FROM PoolTrip , LatLongs WHERE PoolTrip.uniqueid_val = LatLongs.routeId;";
 
 */
+
 //echo "string".$sql;
 
 $product_type_result = mysql_query($sql,$link);
@@ -86,7 +76,7 @@ $product_type_result = mysql_query($sql,$link);
 if (!$product_type_result) {
 
    echo "{";
-  echo '"status_code" : 3477,';
+  echo '"status_code" : 200,';
   echo '"status_message" : "No ProductType results found in our server."';
   echo "}";
     exit;
@@ -100,26 +90,13 @@ $response_array = array();
 
 
 $tmpBusArray = array(
- 'trip_path' => $row['trip_path'],
-   'source_name' =>  $row['source_name'],
-    'destination_name' =>  $row['destination_name'],
-    'source_lat' =>  $row['source_lat'],
-    'source_lng' =>  $row['source_lng'],
-    'destination_lat' =>  $row['destination_lat'],
-    'destination_lng' =>  $row['destination_lng'],
-    'time_leaving_source' =>  $row['time_leaving_source'],
-    'time_leaving_destination' =>  $row['time_leaving_destination'],
-    'number_of_seats' =>  $row['number_of_seats'],
-    'traveller_type' =>  $row['traveller_type'],
-    'trip_type' =>  $row['trip_type'],
-    'total_trip_time' =>  $row['total_trip_time'],
-    'total_trip_distance' =>  $row['total_trip_distance'],
-    'trip_via' =>  $row['trip_via'],
-    'uniqueid_val' => $row['uniqueid_val'],
-    'phonenumber_val' => $row['phonenumber_val'],
-   'email_val' => $row['email_val'],
-   'is_trip_live' => $row['is_trip_live']
-   //'routeId' => $row['routeId']
+ 'latitude' => $row['latitude'],
+   'longitude' =>  $row['longitude'],
+    'routeId' =>  $row['routeId'],
+    'distance' =>  $row['distance'],
+    'duration' =>  $row['duration'],
+    'htmlImstruction' =>  $row['htmlImstruction'],
+    'polyline' =>  $row['polyline']
     );
 $response_array[] = $tmpBusArray;
     
@@ -138,7 +115,7 @@ $response_array[] = $tmpBusArray;
 
 if (count($response_array)>=0) {
 
-echo '"trips" :'.json_encode($response_array);
+echo '"latlongs" :'.json_encode($response_array);
 
 echo "}";
 

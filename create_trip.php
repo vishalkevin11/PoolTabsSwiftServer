@@ -309,12 +309,14 @@ if(is_array($records)){
 $latValue =  isset($value["latitude"]) ? $value["latitude"] : 0.0;
 $longValue =  isset($value["longitude"]) ? $value["longitude"] : 0.0;
 $routeIdValue =  isset($value["routeId"]) ? $value["routeId"] : 0.0;
-$distanceValue = isset($_POST['distance']) ? "'".$_POST['distance']."'" : "\"\"";
-$durationValue =  isset($_POST['duration']) ? "'".$_POST['duration']."'" : "\"\"";
-$htmlImstructionValue =  isset($_POST['rawInstructions']) ? "'".$_POST['rawInstructions']."'" : "\"\"";
+$distanceValue = isset($value['distance']) ? "'".$value['distance']."'" : "\"\"";
+$durationValue =  isset($value['duration']) ? "'".$value['duration']."'" : "\"\"";
+$htmlImstructionValue =  isset($value['rawInstructions']) ? "'".$value['rawInstructions']."'" : "\"\"";
+$polyline =  isset($value['polyline']) ? "'".$value['polyline']."'" : "\"\"";
 
- $sql  .= "INSERT INTO LatLongs (latitude, longitude, routeId, distance , duration,htmlImstruction) 
-                VALUES ($latValue,$longValue,$routeIdValue,$distanceValue,$durationValue,$htmlImstructionValue);";
+
+ $sql  .= "INSERT INTO LatLongs (latitude, longitude, routeId, distance , duration,htmlImstruction,polyline) 
+                VALUES ($latValue,$longValue,$routeIdValue,$distanceValue,$durationValue,$htmlImstructionValue,$polyline);";
  //echo "value".json_encode($records);
   }
 
@@ -337,7 +339,7 @@ $htmlImstructionValue =  isset($_POST['rawInstructions']) ? "'".$_POST['rawInstr
 
 // echo "}";
 
-  // echo "string".$sql;
+   //echo "string".$sql;
  
  //}
  //echo "}";
@@ -354,7 +356,7 @@ $htmlImstructionValue =  isset($_POST['rawInstructions']) ? "'".$_POST['rawInstr
         } else {
             echo "{";
             echo '"status_code" : 200,';
-           // echo '"status_code_s" :'.$sql.',';
+            echo '"status_code_s" :'.$sql.',';
             echo '"status_message" : "Failed  to create trip"';
             echo "}";
             

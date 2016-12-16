@@ -1,16 +1,30 @@
 
-<?php 
+<?php require 'db_connect_tavant.php';
 
- if (!$link = @mysql_connect('localhost', 'root', 'root')) {
+
+//header("Access-Control-Allow-Origin: *");
+
+
+
+
+
+if (!$link = @mysql_connect($host_name, $db_user_name, $db_user_password)) {
+
+
+ //if (!$link = @mysql_connect('localhost', 'root', 'root')) {
+// if (!$link = @mysql_connect('mysql.hostinger.in', 'u355642838_kevi', '123456')) {
     echo 'Could not connect to mysql';
     exit;
 }
 
 
-if (!mysql_select_db('TavantPool', $link)) {
+//if (!mysql_select_db('TavantPoolWeekDay', $link)) {
+if (!mysql_select_db($db_name, $link)) {
+//if (!mysql_select_db('u355642838_tpool', $link)) {
     echo 'Could not select database';
     exit;
 }
+
 
 
 date_default_timezone_set("Asia/Kolkata");
@@ -49,7 +63,7 @@ date_default_timezone_set("Asia/Kolkata");
 //                        LIKE '%".$email_val."%';";
 
 
-$sql = "SELECT latitude, longitude, routeId, distance , duration,htmlImstruction,polyline
+$sql = "SELECT latitude, longitude, routeId, distance , duration,htmlImstruction,polyline,orderID
          FROM LatLongs where routeId =".$routeId.";";
 
                       /* $sql = "SELECT uniqueid_val,
@@ -96,7 +110,8 @@ $tmpBusArray = array(
     'distance' =>  $row['distance'],
     'duration' =>  $row['duration'],
     'htmlImstruction' =>  $row['htmlImstruction'],
-    'polyline' =>  $row['polyline']
+    'polyline' =>  $row['polyline'],
+    'orderID' => $row["orderID"]
     );
 $response_array[] = $tmpBusArray;
     

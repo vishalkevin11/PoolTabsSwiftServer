@@ -26,37 +26,7 @@ date_default_timezone_set("Asia/Kolkata");
 
 $email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']."'" : "";
 
-    //$trip_path = $_POST['trip_path'];
 
-    // $source_name =  $_POST['source_name'];
-    // $destination_name =  $_POST['destination_name'];
-    // $number_of_seats =  $_POST['number_of_seats'];
-    
-    // $time_leaving_source =  $_POST['time_leaving_source'];
-    // $time_leaving_destination =  $_POST['time_leaving_destination'];
-    // $traveller_type =  $_POST['traveller_type'];
-    // $trip_type =  $_POST['trip_type'];
-    // $total_trip_time =  $_POST['total_trip_time'];
-    // $uniqueid_val        = strtotime($date);
-    // $phonenumber_val     = $_POST['phone'];
-   //  $email_val           = $_POST['email'];
-
-
-// $sql = "SELECT trip_path, 
-//         source_name, 
-//         destination_name, 
-//         time_leaving_source, 
-//         time_leaving_destination,
-//         number_of_seats,
-//         traveller_type, 
-//         trip_type, 
-//         total_trip_time, 
-//         uniqueid_val,
-//         phonenumber_val, 
-//         email_val,
-//         is_trip_live
-//         FROM PoolTrip WHERE email_val 
-//                        LIKE '%".$email_val."%';";
 
 $sql = "SELECT uniqueid_val,
     trip_path,
@@ -81,7 +51,7 @@ $sql = "SELECT uniqueid_val,
         isPending,
         totalSeatsOffered,
         seatsBooked
-         FROM PoolTrip where email_val = ".$email_val." and is_trip_live = 1;";
+         FROM PoolTrip where is_trip_live = 1 and uniqueid_val IN (SELECT  bookedTripID FROM BookingInfo WHERE bookieEmail = ".$email_val.")";
 
                       /* $sql = "SELECT uniqueid_val,
     trip_path,
@@ -97,7 +67,7 @@ $sql = "SELECT uniqueid_val,
          FROM PoolTrip , LatLongs WHERE PoolTrip.uniqueid_val = LatLongs.routeId;";
 
 */
-//echo "string".$sql;
+         //echo "string".$sql;
 
 $product_type_result = mysql_query($sql,$link);
 
@@ -106,7 +76,7 @@ $product_type_result = mysql_query($sql,$link);
 if (!$product_type_result) {
 
    echo "{";
-  echo '"status_code" : 400,';
+  echo '"status_code" : 3477,';
   echo '"status_message" : "No ProductType results found in our server."';
   echo "}";
     exit;

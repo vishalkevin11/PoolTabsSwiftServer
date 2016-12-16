@@ -1,13 +1,20 @@
-<?php
+<?php require 'db_connect_tavant.php';
 
 
-    if (!$link = @mysql_connect('localhost', 'root', 'root')) {
+//header("Access-Control-Allow-Origin: *");
+
+
+if (!$link = @mysql_connect($host_name, $db_user_name, $db_user_password)) {
+//if (!$link = @mysql_connect('mysql.hostinger.in', 'u355642838_kevi', '123456')) {
+//if (!$link = @mysql_connect('localhost', 'root', 'root')) {
     echo 'Could not connect to mysql';
     exit;
 }
 
 
-if (!mysql_select_db('TavantPool', $link)) {
+//if (!mysql_select_db('u355642838_tpool', $link)) {
+//if (!mysql_select_db('TavantPoolWeekDay', $link)) {
+if (!mysql_select_db($db_name, $link)) {
     echo 'Could not select database';
     exit;
 }
@@ -51,13 +58,31 @@ $max_distance =  2;
 
    
 $number_of_seats            =  isset($_GET['number_of_seats']) ? "".$_GET['number_of_seats']."" : 0;
-//  $traveller_type             =  isset($decoded['traveller_type']) ? "".$decoded['traveller_type']."" : 0;
+$traveller_type             =  isset($_GET['traveller_type']) ? "".$_GET['traveller_type']."" : 0;
         $trip_type          =  isset($_GET['trip_type']) ? "".$_GET['trip_type']."" : 0;
 $email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']."'" : "";
 
+$schedule_type             =  isset($_GET['schedule_type']) ? "".$_GET['schedule_type']."" : 0;
+
+//date('m/d/y', strtotime($date));
+$trip_date =  isset($_GET['trip_date']) ? "".$_GET['trip_date']."" : "";
+
+$sstime = strtotime($trip_date);
+
+//$trip_timestamp = date('Y-m-d H:i:s', $sstime);
+$trip_timestamp = date('Y-M-d', $sstime);
+
+//1= Mon, 7 = sun
+$weekdayIndex = date('w', strtotime($trip_timestamp));
+//echo "ssss".$weekdayIndex;
+//echo "tttttt".$trip_timestamp;
+
+//echo "wdwdwwd".date_format($date,"Y/m/d H:i:s");
+
+//echo "trip_date".$trip_timestamp;
 
 
-// echo "orglat".$origLat;
+ //echo "orglat".$traveller_type;
 // echo "deslat".$destLat;
 // echo "orglng".$origLon;
 // echo "deslng".$deslng;
@@ -69,20 +94,46 @@ $email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']
   // //$number_of_seats = 1;
   //  $trip_type  = 1;
 
+
+
+
 $sql = "";
 
 //$whereArr = [];
 
+
+
+if($schedule_type!="" && $schedule_type != 0){
+    $whereArr[] = "schedule_type =".$schedule_type."";
+// if ($schedule_type == 1) {
+//   //see only days
+// }
+
+}
+else if($trip_date!=""){
+    $whereArr[] = "tripDate like'".$trip_timestamp."%'";
+    //echo "ssss".$whereArr[0];
+}
+
+
+if($traveller_type!="" && $traveller_type != 0){
+    $whereArr[] = "traveller_type =".$traveller_type."";
+}
+
 if($trip_type!="" && $trip_type != 0){
     $whereArr[] = "trip_type =".$trip_type."";
 }
+
+
+
+
 
 if($email_val!=""){
     $whereArr[] = "email_val !=".$email_val."";
 }
 
 if($number_of_seats!="" && $number_of_seats != 0){
-    $whereArr[] = "number_of_seats =".$number_of_seats."";
+    $whereArr[] = "number_of_seats >=".$number_of_seats."";
 }
 
 
@@ -116,7 +167,19 @@ $sql  .=  "SELECT  distinct uniqueid_val,
         destination_lng, 
   time_leaving_source, time_leaving_destination,
    number_of_seats, traveller_type, trip_type, total_trip_time,total_trip_distance,trip_via,
-    phonenumber_val, email_val, is_trip_live
+    phonenumber_val, email_val, is_trip_live,schedule_type,
+        day1,
+        day2,
+        day3,
+        day4,
+        day5,
+        day6,
+        day7,
+        tripDate,
+        isBooked,
+        isPending,
+        totalSeatsOffered,
+        seatsBooked
 FROM    PoolTrip  where uniqueid_val IN (
 
 SELECT  distinct uniqueid_val
@@ -167,7 +230,19 @@ else if(($origLat==""  &&  $origLon=="" && $destLat==""  &&  $destLon=="") || ($
         destination_lng, 
   time_leaving_source, time_leaving_destination,
    number_of_seats, traveller_type, trip_type, total_trip_time,total_trip_distance,trip_via,
-    phonenumber_val, email_val, is_trip_live
+    phonenumber_val, email_val, is_trip_live,schedule_type,
+        day1,
+        day2,
+        day3,
+        day4,
+        day5,
+        day6,
+        day7,
+        tripDate,
+        isBooked,
+        isPending,
+        totalSeatsOffered,
+        seatsBooked
 FROM    PoolTrip  where  is_trip_live = 1 and ".$where_clause.";";
 }
 else {
@@ -181,7 +256,19 @@ else {
         destination_lng, 
   time_leaving_source, time_leaving_destination,
    number_of_seats, traveller_type, trip_type, total_trip_time,total_trip_distance,trip_via,
-    phonenumber_val, email_val, is_trip_live
+    phonenumber_val, email_val, is_trip_live,schedule_type,
+        day1,
+        day2,
+        day3,
+        day4,
+        day5,
+        day6,
+        day7,
+        tripDate,
+        isBooked,
+        isPending,
+        totalSeatsOffered,
+        seatsBooked
 FROM    PoolTrip  where uniqueid_val IN (
 
 SELECT  distinct uniqueid_val
@@ -369,7 +456,21 @@ $tmpBusArray = array(
     'uniqueid_val' => $row['uniqueid_val'],
     'phonenumber_val' => $row['phonenumber_val'],
    'email_val' => $row['email_val'],
-   'is_trip_live' => $row['is_trip_live']
+   'is_trip_live' => $row['is_trip_live'],
+    'schedule_type' => $row['schedule_type'],
+   'day1' => $row['day1'],
+   'day2' => $row['day2'],
+   'day3' => $row['day3'],
+   'day4' => $row['day4'],
+   'day5' => $row['day5'],
+   'day6' => $row['day6'],
+   'day7' => $row['day7'],
+   'tripDate' => $row['tripDate'],
+   'isBooked' => $row['isBooked'],
+   'isPending' => $row['isPending'],
+   'totalSeatsOffered' => $row['totalSeatsOffered'],
+   'seatsBooked' => $row['seatsBooked']
+
   // 'routeId' => $row['routeId']
     );
 $response_array[] = $tmpBusArray;

@@ -1,13 +1,27 @@
-<?php
+<?php require 'db_connect_tavant.php';
 
 
- $conn = mysqli_connect('localhost', 'root', 'root', 'tavantpool');
-    
-    if (!$conn) {
-        echo 'Could not connect to mysql';
-        exit;
+//header("Access-Control-Allow-Origin: *");
+
+
+
+      $conn = mysqli_connect($host_name, $db_user_name, $db_user_password, $db_name);
+
+
+      // $conn = mysqli_connect('localhost', 'root', 'root', 'TavantPoolWeekDay');
+        
+    //     if (!$conn) {
+    //         echo 'Could not connect to mysql';
+    //         exit;
+    // }
+
+         // $conn = mysqli_connect('mysql.hostinger.in', 'u355642838_kevi', '123456', 'u355642838_tpool');
+        
+        if (!$conn) {
+            echo 'Could not connect to mysql';
+            exit;
     }
-    
+
     date_default_timezone_set("Asia/Kolkata");
     $date = date('Y/m/d h:i:s', time());
     
@@ -29,7 +43,7 @@ if(is_array($records)){
     }
 
        echo "{";
-  echo '"status_code" : 400,';
+  echo '"status_code" : 200,';
 
   echo '"status_message" : "Successfully inserted"';
   echo "}";

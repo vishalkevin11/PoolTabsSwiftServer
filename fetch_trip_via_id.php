@@ -24,39 +24,8 @@ if (!mysql_select_db($db_name, $link)) {
 date_default_timezone_set("Asia/Kolkata");
 
 
-$email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']."'" : "";
+$trip_id_val                  = isset($_GET['trip_id']) ? "'".$_GET['trip_id']."'" : "";
 
-    //$trip_path = $_POST['trip_path'];
-
-    // $source_name =  $_POST['source_name'];
-    // $destination_name =  $_POST['destination_name'];
-    // $number_of_seats =  $_POST['number_of_seats'];
-    
-    // $time_leaving_source =  $_POST['time_leaving_source'];
-    // $time_leaving_destination =  $_POST['time_leaving_destination'];
-    // $traveller_type =  $_POST['traveller_type'];
-    // $trip_type =  $_POST['trip_type'];
-    // $total_trip_time =  $_POST['total_trip_time'];
-    // $uniqueid_val        = strtotime($date);
-    // $phonenumber_val     = $_POST['phone'];
-   //  $email_val           = $_POST['email'];
-
-
-// $sql = "SELECT trip_path, 
-//         source_name, 
-//         destination_name, 
-//         time_leaving_source, 
-//         time_leaving_destination,
-//         number_of_seats,
-//         traveller_type, 
-//         trip_type, 
-//         total_trip_time, 
-//         uniqueid_val,
-//         phonenumber_val, 
-//         email_val,
-//         is_trip_live
-//         FROM PoolTrip WHERE email_val 
-//                        LIKE '%".$email_val."%';";
 
 $sql = "SELECT uniqueid_val,
     trip_path,
@@ -81,7 +50,7 @@ $sql = "SELECT uniqueid_val,
         isPending,
         totalSeatsOffered,
         seatsBooked
-         FROM PoolTrip where email_val = ".$email_val." and is_trip_live = 1;";
+         FROM PoolTrip where uniqueid_val = ".$trip_id_val." and is_trip_live = 1;";
 
                       /* $sql = "SELECT uniqueid_val,
     trip_path,

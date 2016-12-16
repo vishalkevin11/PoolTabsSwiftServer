@@ -24,7 +24,7 @@ if (!mysql_select_db($db_name, $link)) {
 date_default_timezone_set("Asia/Kolkata");
 
 
-$email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']."'" : "";
+$bookedTripID_val                  = isset($_GET['bookedTripID']) ? "'".$_GET['bookedTripID']."'" : "";
 
     //$trip_path = $_POST['trip_path'];
 
@@ -58,30 +58,9 @@ $email_val                  = isset($_GET['email_val']) ? "'".$_GET['email_val']
 //         FROM PoolTrip WHERE email_val 
 //                        LIKE '%".$email_val."%';";
 
-$sql = "SELECT uniqueid_val,
-    trip_path,
-  source_name, 
-  destination_name,
-  source_lat,
-        source_lng,
-        destination_lat,
-        destination_lng, 
-  time_leaving_source, time_leaving_destination,
-   number_of_seats, traveller_type, trip_type, total_trip_time,total_trip_distance,trip_via,
- phonenumber_val, email_val, is_trip_live,schedule_type,
-        day1,
-        day2,
-        day3,
-        day4,
-        day5,
-        day6,
-        day7,
-        tripDate,
-        isBooked,
-        isPending,
-        totalSeatsOffered,
-        seatsBooked
-         FROM PoolTrip where email_val = ".$email_val." and is_trip_live = 1;";
+$sql = "SELECT ownerEmail,isBooked,isPending,isExpired,seatsBooked,totalSeatsOffered,bookieEmail,bookiePhoneNumber,
+  bookedTripID,message,messageTag,deviceToken,ownerPhoneNumber,deviceType
+         FROM BookingInfo where bookedTripID = ".$bookedTripID_val."";
 
                       /* $sql = "SELECT uniqueid_val,
     trip_path,
@@ -120,39 +99,20 @@ $response_array = array();
 
 
 $tmpBusArray = array(
- 'trip_path' => $row['trip_path'],
-   'source_name' =>  $row['source_name'],
-    'destination_name' =>  $row['destination_name'],
-    'source_lat' =>  $row['source_lat'],
-    'source_lng' =>  $row['source_lng'],
-    'destination_lat' =>  $row['destination_lat'],
-    'destination_lng' =>  $row['destination_lng'],
-    'time_leaving_source' =>  $row['time_leaving_source'],
-    'time_leaving_destination' =>  $row['time_leaving_destination'],
-    'number_of_seats' =>  $row['number_of_seats'],
-    'traveller_type' =>  $row['traveller_type'],
-    'trip_type' =>  $row['trip_type'],
-    'total_trip_time' =>  $row['total_trip_time'],
-    'total_trip_distance' =>  $row['total_trip_distance'],
-    'trip_via' =>  $row['trip_via'],
-    'uniqueid_val' => $row['uniqueid_val'],
-    'phonenumber_val' => $row['phonenumber_val'],
-   'email_val' => $row['email_val'],
-   'schedule_type' => $row['schedule_type'],
-   'day1' => $row['day1'],
-   'day2' => $row['day2'],
-   'day3' => $row['day3'],
-   'day4' => $row['day4'],
-   'day5' => $row['day5'],
-   'day6' => $row['day6'],
-   'day7' => $row['day7'],
-   'tripDate' => $row['tripDate'],
-   'isBooked' => $row['isBooked'],
-   'isPending' => $row['isPending'],
-   'totalSeatsOffered' => $row['totalSeatsOffered'],
-   'seatsBooked' => $row['seatsBooked']
-
-   //'routeId' => $row['routeId']
+ 'ownerEmail' => $row['ownerEmail'],
+ 'isBooked' => $row['isBooked'],
+ 'isPending' => $row['isPending'],
+ 'isExpired' => $row['isExpired'],
+ 'seatsBooked' => $row['seatsBooked'],
+ 'totalSeatsOffered' => $row['totalSeatsOffered'],
+ 'bookieEmail' => $row['bookieEmail'],
+ 'bookiePhoneNumber' => $row['bookiePhoneNumber'],
+ 'bookedTripID' => $row['bookedTripID'],
+ 'message' => $row['message'],
+ 'messageTag' => $row['messageTag'],
+ 'deviceToken' => $row['deviceToken'],
+ 'ownerPhoneNumber' => $row['ownerPhoneNumber'],
+ 'deviceType' => $row['deviceType']
     );
 $response_array[] = $tmpBusArray;
     
@@ -171,7 +131,7 @@ $response_array[] = $tmpBusArray;
 
 if (count($response_array)>=0) {
 
-echo '"trips" :'.json_encode($response_array);
+echo '"bookies" :'.json_encode($response_array);
 
 echo "}";
 
